@@ -1,6 +1,9 @@
 ded_technologies\rtc\intern\Person.class
+ded_technologies\rtc\intern\DataLoader.class
+ded_technologies\rtc\intern\DataGroup.class
+ded_technologies\rtc\intern\DataSupplierCSV.class
+ded_technologies\rtc\intern\StudentService.class
+ded_technologies\rtc\intern\CommandBuilder.class
+ded_technologies\rtc\intern\Command.class
 ded_technologies\rtc\intern\RtcIntern.class
-ded_technologies\rtc\intern\PersonAgeDataGroups.class
-ded_technologies\rtc\intern\DataSupplier.class
-ded_technologies\rtc\intern\ClassroomDataGroups.class
-ded_technologies\rtc\intern\PersonNameDataGroup.class
+ded_technologies\rtc\intern\GroupCriterion.class
