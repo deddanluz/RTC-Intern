@@ -2,8 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ded_technologies.rtc.intern;
+package data.suppliers;
 
+import objects.Person;
+import interfaces.DataLoader;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -34,7 +36,7 @@ public class DataSupplierCSV implements DataLoader{
             //делим строку на части
             return READER.readLine().split(";");
         } catch (NullPointerException ex) {
-            Logger.getLogger(DataSupplierCSV.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(DataSupplierCSV.class.getName()).log(Level.SEVERE, null, ex);
         }
         //когда данные закончились
         return null;
