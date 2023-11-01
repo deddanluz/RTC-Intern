@@ -22,7 +22,7 @@ public class UploadByFirstLetter implements Command {
         //сортировка по первой букве фамилии
         GroupCriterion firstLetterCriterion = p -> p.getFamily().charAt(0);
         DataGroup dg = new DataGroup(firstLetterCriterion);
-        dg.addPersons(dl.getPerson());
+        dg.addPersons(((DataLoader) dl).getPerson());
         return dg;
     }
 

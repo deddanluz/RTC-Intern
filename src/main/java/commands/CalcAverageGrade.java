@@ -15,15 +15,10 @@ import java.io.IOException;
  * @author Даниил
  */
 public class CalcAverageGrade implements Command{
-    private DataLoader dl;
-    
-    public CalcAverageGrade(){
-        
-    }
-    
+    private DataLoader dl;   
     //вычислить ср. оценку старших классов
     @Override
-    public Object execute() throws IOException{
+    public String execute() throws IOException{
         //загружаем с сортировкой по группе
         Command cmd = new UploadbyGroup();
         cmd.setDataLoader(dl);
@@ -42,7 +37,7 @@ public class CalcAverageGrade implements Command{
             }
         }
         //делим на общее кол-во оценок и получаем среднее
-        return sum/((personSH[0].length+personSH[1].length)*personSH[0][0].getGrades().length);
+        return ""+sum/((personSH[0].length+personSH[1].length)*personSH[0][0].getGrades().length);
     }
     
     @Override

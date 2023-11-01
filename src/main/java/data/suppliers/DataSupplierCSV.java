@@ -25,7 +25,7 @@ public class DataSupplierCSV implements DataLoader{
     private String[] headers;                                                   //заголовки
     private int iLine=-1;                                                       //позиция по строке
     
-    public DataSupplierCSV(String file) throws FileNotFoundException{
+    public DataSupplierCSV(String file) throws FileNotFoundException, NullPointerException{
         //инициализируем
         READER = new BufferedReader(new FileReader(file));
     }

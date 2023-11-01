@@ -17,10 +17,9 @@ import java.util.Arrays;
  */
 public class CalcHonorsPerson implements Command{
     private DataLoader dl;
-    
     //вычислить отличников старше 14 лет
     @Override
-    public Object execute() throws IOException{
+    public String execute() throws IOException{
         //загружаем с сортировкой по возрасту
         Command cmd = new UploadbyAge();
         cmd.setDataLoader(dl);
@@ -52,7 +51,13 @@ public class CalcHonorsPerson implements Command{
                 }
             }
         }
-        return honors;
+        StringBuilder output = new StringBuilder();
+        for (Person person : honors){
+            output.append(person.getFamily()).append("\t").append(person.getName()).append("\t")
+                    .append(person.getAge()).append("\t").append(person.getGroup()).append("\n");
+                    
+        }
+        return output.toString();
     }
     
     @Override

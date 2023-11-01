@@ -7,11 +7,11 @@ interfaces\GroupCriterion.class
 commands\Help.class
 interfaces\Command.class
 services\StudentService.class
-services\StudentService$CommandProvider.class
 commands\UploadbyAge.class
 commands\CalcAverageGrade.class
 commands\CalcHonorsPerson.class
 data\suppliers\DataSupplierCSV.class
 builders\CommandBuilder.class
+interfaces\TextLoader.class
 commands\UploadbyGroup.class
 interfaces\DataLoader.class

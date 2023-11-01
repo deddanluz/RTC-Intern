@@ -23,10 +23,15 @@ public class CommandBuilder {
     }
     //получаем команду
     public Command create(String command) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException{
-        Class cls = SS.new CommandProvider().commandProvider(command);
+        //получаем поставщика команд
+        Class cls = SS.commandProvider(command);
+        //берем конструктор класса
         Constructor cnstr = cls.getConstructor();
-        Command cmd = (Command) cnstr.newInstance();
-        cmd.setDataLoader(SS.getDataLoader());
+        //создаем новый объект класса
+        Command <Object> cmd = (Command) cnstr.newInstance();
+        //отдаем поставщика данных
+        cmd.setDataLoader(SS.dataLoaderProvider());
+        //возвращаем сгенерированную команду
         return cmd;
     }
 }

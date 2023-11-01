@@ -20,7 +20,7 @@ public class SearchByFamily implements Command{
     private DataLoader dl;       
 
     @Override
-    public Object execute() throws IOException{
+    public String execute() throws IOException{
         //загружаем с сортировкой по первой букве фамилии
         Command cmd = new UploadByFirstLetter();
         cmd.setDataLoader(dl);
@@ -40,7 +40,13 @@ public class SearchByFamily implements Command{
                 currentIndex++;
             }
         }
-        return search;
+        StringBuilder output = new StringBuilder();
+        for (Person person : search){
+            output.append(person.getFamily()).append("\t").append(person.getName()).append("\t")
+                    .append(person.getAge()).append("\t").append(person.getGroup()).append("\n");
+                    
+        }
+        return output.toString();
     }
     
     @Override

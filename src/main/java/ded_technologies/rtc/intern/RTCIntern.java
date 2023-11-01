@@ -12,73 +12,50 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import services.StudentService;
-
+//calcAverageGrade -p "D:\YandexDisk\ARCHIVE\ДОКУМЕНТЫ\RTC\students.csv" -f Попов
 /**
  *
  * @author Даниил
  */
 public class RTCIntern {
-    private CommandBuilder CB;                                                  //класс команд
+    private static CommandBuilder CB;                                           //класс команд
+    private static String path;
     public static String family;                                                //фамилия для поиска
     
     public static void main(String[] args) {
         try {
             RTCIntern rtci = new RTCIntern();
             rtci.getParams(args);
+            CB = new CommandBuilder(new StudentService(new DataSupplierCSV(path)));
             rtci.view(args[0]);
-        } catch (IOException ex) {
-            System.out.println("Error: "+ex.getMessage());
-        }
-    }
-    
-    private void view(String command) throws IOException{
-        try{
-            switch (command){
-                case "help":
-                    System.out.println(CB.create(command).execute());
-                    break;
-                case "calcAverageGrade":
-                    //средняя оценка 10-11 классов
-                    System.out.println("Средняя оценка 10 и 11 классов: "+CB.create(command).execute());
-                    break;
-                case "calcHonorsPerson":
-                    //отличники старше 14 лет
-                    System.out.println("Отличники страше 14 лет: ");
-                    objects.Person[] persons = (objects.Person[]) CB.create(command).execute();
-                    System.out.println("Фамилия\tИмя\tВозраст\tКласс");
-                    for (objects.Person person:persons){
-                        System.out.println(person.getFamily()+"\t"+person.getName()+"\t"+person.getAge()+"\t"+person.getGroup());
-                    }
-                    break;
-                case "searchByFamily":
-                    //поиск по фамилии
-                    persons = (objects.Person[]) CB.create(command).execute();
-                    if (persons[0]!=null){
-                        //если хотя бы одна фамилия была найдена
-                        System.out.println("Фамилия\tИмя\tВозраст\tКласс");
-                        for (objects.Person person:persons){
-                            System.out.println(person.getFamily()+"\t"+person.getName()+"\t"+person.getAge()+"\t"+person.getGroup());
-                        }
-                    }else{
-                        //ничего не нашлось
-                        System.out.println("Не надено ни одного ученика!");
-                    }
-                    break;
-                default:
-                    System.out.println("Error: invalid arguments! Please, input 'help' for command arguments.");
-            }
-        } catch (ClassNotFoundException e){
-            System.out.println("Error: invalid arguments! Please, input 'help' for command arguments.");
-        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException | IllegalArgumentException ex) {
+        } catch (IOException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException ex) {
             Logger.getLogger(RTCIntern.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ArrayIndexOutOfBoundsException exp){
+            Logger.getLogger(RTCIntern.class.getName()).log(Level.SEVERE, "Команда не указана! Введите 'help' для просмотра списка команд.", exp);
+        } catch (NullPointerException exp){
+            if (!args[0].toLowerCase().equals("help")){
+                Logger.getLogger(RTCIntern.class.getName()).log(Level.SEVERE, "Не указаны обязательные аргументы! Введите 'help' для просмотра списка команд.", exp);
+            }else{
+                //при запросе 'help' вызываем команду напрямую
+                //т.к. не можем создать DataLoader, потому что
+                //Поставщик помощи отличается от поставщика персон
+                System.out.println(new commands.Help().execute());
+            }
         }
     }
-    
+    //метод вывода в консоль
+    private void view(String command) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException{
+        //получаем результат команды
+        Object output = CB.create(command).execute();
+        //печатаем
+        System.out.println(output);
+    }
+    //парсим аргументы консоли
     private void getParams(String[] args) throws FileNotFoundException{
         for (int i=1; i<args.length;){
             switch (args[i]) {
                 case "-p":
-                    CB = new CommandBuilder(new StudentService(new DataSupplierCSV(args[i+1])));
+                    path = args[i+1];
                     i=i+2;
                     break;
                 case "-f":

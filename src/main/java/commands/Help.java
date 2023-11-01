@@ -17,20 +17,20 @@ import services.StudentService;
 /**
  *
  * @author Даниил
- */
+ */ 
 public class Help implements Command{
     @Override
     public Object execute(){
         StringBuilder area;
-            try(BufferedReader buff = new BufferedReader(new FileReader("help.txt"))){
-                String line;
-                area = new StringBuilder();
-                while ((line=buff.readLine())!=null){
-                    area.append(line);
-                }
-                return area.toString();
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(StudentService.class.getName()).log(Level.SEVERE, null, ex);
+        try(BufferedReader buff = new BufferedReader(new FileReader("help.txt"))){
+            String line;
+            area = new StringBuilder();
+            while ((line=buff.readLine())!=null){
+                area.append(line);
+            }
+            return area.toString();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(StudentService.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(StudentService.class.getName()).log(Level.SEVERE, null, ex);
         }

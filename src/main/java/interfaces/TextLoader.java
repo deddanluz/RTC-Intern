@@ -4,14 +4,10 @@
  */
 package interfaces;
 
-import java.io.IOException;
-
 /**
  *
  * @author Даниил
- * @param <T>
  */
-public interface Command <T> {
-    T execute() throws IOException;
-    public void setDataLoader(DataLoader dl);
+public interface TextLoader {
+    String getText();
 }
