@@ -4,25 +4,21 @@
  */
 package services;
 
+import commands.CalcAverageGrade;
+import commands.CalcHonorsPerson;
+import commands.SearchByFamily;
 import interfaces.Command;
 import interfaces.DataLoader;
-import java.nio.file.ProviderNotFoundException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ServiceLoader;
 
 /**
  *
  * @author Даниил
  */
 public class StudentService {
-    private final DataLoader DL;                                                //поставщик данных
-    private final String CURRENT_COMMAND_PROVIDER;
+    private final DataLoader DL;
     //получаем поставщика данных
     public StudentService(DataLoader dl){
         DL = dl;
-        CURRENT_COMMAND_PROVIDER="com.ded_technologies.commands.Help";
     }
     
     public DataLoader getDataLoader(){
@@ -30,28 +26,21 @@ public class StudentService {
     }
     
     public class CommandProvider{
-        //Все поставщики комманд
-        public List<Command> commandProviders() {
-            List<Command> services = new ArrayList<>();
-            ServiceLoader<Command> loader = ServiceLoader.load(Command.class);
-            loader.forEach(services::add);
-            return services;
-        }
-        //Текущий (по умолчанию) поставщик данных
-        public Command commandProvider() {
-            return commandProvider(CURRENT_COMMAND_PROVIDER);
+        private final Class[] providers = {CalcAverageGrade.class,
+             CalcHonorsPerson.class,
+             SearchByFamily.class};
+        //Текущий (по умолчанию) поставщик команд
+        public Class<Command> commandProvider() throws ClassNotFoundException {
+            return commandProvider("help");
         }
         //Поставщик комманд по имени
-        public Command commandProvider(String providerName) {
-            ServiceLoader<Command> loader = ServiceLoader.load(Command.class);
-            Iterator<Command> it = loader.iterator();
-            while (it.hasNext()) {
-                Command provider = it.next();
-                if (providerName.toLowerCase().equals(provider.getClass().getName().toLowerCase())) {
+        public Class<Command> commandProvider(String providerName) throws ClassNotFoundException {
+            for (Class provider: providers){
+                if (provider.getName().split("\\.")[1].toLowerCase().equals(providerName.toLowerCase())){
                     return provider;
                 }
             }
-            throw new ProviderNotFoundException("Exchange Rate provider " + providerName + " not found");
+            throw new ClassNotFoundException(providerName+" not found!");
         }
     }
 }

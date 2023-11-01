@@ -10,7 +10,6 @@ import java.io.IOException;
  *
  * @author Даниил
  */
-
 public interface Command {
     Object execute() throws IOException;
     public void setDataLoader(DataLoader dl);

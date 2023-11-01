@@ -6,8 +6,9 @@ package builders;
 
 import services.StudentService;
 import interfaces.Command;
-import interfaces.DataLoader;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 
 /**
@@ -21,9 +22,11 @@ public class CommandBuilder {
         SS = ss;
     }
     //получаем команду
-    public Command create(String command) throws IOException{
-        DataLoader dl = SS.getDataLoader();
-        Command cmd = SS.new CommandProvider().commandProvider(command);
+    public Command create(String command) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException{
+        Class cls = SS.new CommandProvider().commandProvider(command);
+        Constructor cnstr = cls.getConstructor();
+        Command cmd = (Command) cnstr.newInstance();
+        cmd.setDataLoader(SS.getDataLoader());
         return cmd;
     }
 }

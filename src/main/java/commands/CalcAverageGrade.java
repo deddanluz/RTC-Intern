@@ -17,6 +17,10 @@ import java.io.IOException;
 public class CalcAverageGrade implements Command{
     private DataLoader dl;
     
+    public CalcAverageGrade(){
+        
+    }
+    
     //вычислить ср. оценку старших классов
     @Override
     public Object execute() throws IOException{

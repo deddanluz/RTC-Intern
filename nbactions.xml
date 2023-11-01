@@ -12,8 +12,8 @@
             <properties>
                 <exec.vmArgs></exec.vmArgs>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
-                <exec.appArgs>help</exec.appArgs>
-                <exec.mainClass>ded_technologies.rtc.intern.RtcIntern</exec.mainClass>
+                <exec.appArgs>searchByFamily -p "D:\YandexDisk\ARCHIVE\ДОКУМЕНТЫ\RTC\students.csv" -f Попов</exec.appArgs>
+                <exec.mainClass>ded_technologies.rtc.intern.RTCIntern</exec.mainClass>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>
@@ -29,8 +29,8 @@
             <properties>
                 <exec.vmArgs>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
-                <exec.appArgs>help</exec.appArgs>
-                <exec.mainClass>ded_technologies.rtc.intern.RtcIntern</exec.mainClass>
+                <exec.appArgs>searchByFamily -p "D:\YandexDisk\ARCHIVE\ДОКУМЕНТЫ\RTC\students.csv" -f Попов</exec.appArgs>
+                <exec.mainClass>ded_technologies.rtc.intern.RTCIntern</exec.mainClass>
                 <exec.executable>java</exec.executable>
                 <jpda.listen>true</jpda.listen>
             </properties>
@@ -47,9 +47,9 @@
             <properties>
                 <exec.vmArgs></exec.vmArgs>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
-                <exec.mainClass>ded_technologies.rtc.intern.RtcIntern</exec.mainClass>
+                <exec.mainClass>ded_technologies.rtc.intern.RTCIntern</exec.mainClass>
                 <exec.executable>java</exec.executable>
-                <exec.appArgs>help</exec.appArgs>
+                <exec.appArgs>searchByFamily -p "D:\YandexDisk\ARCHIVE\ДОКУМЕНТЫ\RTC\students.csv" -f Попов</exec.appArgs>
             </properties>
         </action>
     </actions>
