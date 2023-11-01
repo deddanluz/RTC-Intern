@@ -15,18 +15,19 @@ import java.io.IOException;
  * @author Даниил
  */
 public class UploadByFirstLetter implements Command {
-    private final DataLoader DL;
-    
-    public UploadByFirstLetter(DataLoader dl){
-        DL =dl;
-    }
+    private DataLoader dl;
     
     @Override
     public Object execute() throws IOException{
         //сортировка по первой букве фамилии
         GroupCriterion firstLetterCriterion = p -> p.getFamily().charAt(0);
         DataGroup dg = new DataGroup(firstLetterCriterion);
-        dg.addPersons(DL.getPerson());
+        dg.addPersons(dl.getPerson());
         return dg;
+    }
+
+    @Override
+    public void setDataLoader(DataLoader dl) {
+        this.dl = dl;
     }
 }

@@ -5,13 +5,7 @@
 package ded_technologies.rtc.intern;
 
 import builders.CommandBuilder;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import services.StudentService;
 
 /**
  *
@@ -35,18 +29,18 @@ public class RTCIntern {
     private void view(String command) throws IOException{
         switch (command){
             case "help":
-                System.out.println(getHelp());
+                System.out.println(CB.create(command).execute());
                 break;
             case "calcAverageGrade":
                 CB = new CommandBuilder(null); //new StudentService(new DataSupplierCSV(path))
                 //средняя оценка 10-11 классов
-                System.out.println("Средняя оценка 10 и 11 классов: "+CB.calcAverageGrade());
+                System.out.println("Средняя оценка 10 и 11 классов: "+CB.create(command).execute());
                 break;
             case "calcHonorsPerson":
                 CB = new CommandBuilder(null); //new StudentService(new DataSupplierCSV(path))
                 //отличники старше 14 лет
                 System.out.println("Отличники страше 14 лет: ");
-                objects.Person[] persons = (objects.Person[]) CB.calcHonorsPerson();
+                objects.Person[] persons = (objects.Person[]) CB.create(command).execute();
                 System.out.println("Фамилия\tИмя\tВозраст\tКласс");
                 for (objects.Person person:persons){
                     System.out.println(person.getFamily()+"\t"+person.getName()+"\t"+person.getAge()+"\t"+person.getGroup());
@@ -55,7 +49,7 @@ public class RTCIntern {
             case "searchByFamily":
                 CB = new CommandBuilder(null); //new StudentService(new DataSupplierCSV(path))
                 //поиск по фамилии
-                persons = (objects.Person[]) CB.searchByFamily(family);
+                persons = (objects.Person[]) CB.create(command).execute();
                 if (persons[0]!=null){
                     //если хотя бы одна фамилия была найдена
                     System.out.println("Фамилия\tИмя\tВозраст\tКласс");
@@ -70,23 +64,6 @@ public class RTCIntern {
             default:
                 System.out.println("Error: invalid arguments! Please, input 'help' for command arguments.");
         }
-    }
-    
-    private String getHelp(){
-            StringBuilder area;
-            try(BufferedReader buff = new BufferedReader(new FileReader("help.txt"))){
-                String line;
-                area = new StringBuilder();
-                while ((line=buff.readLine())!=null){
-                    area.append(line);
-                }
-                return area.toString();
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(StudentService.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(StudentService.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
     }
     
     private void getParams(String[] args){

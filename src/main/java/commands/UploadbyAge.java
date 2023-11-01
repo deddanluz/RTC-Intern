@@ -15,18 +15,19 @@ import java.io.IOException;
  * @author Даниил
  */
 public class UploadbyAge implements Command {
-    private final DataLoader DL;
-    
-    public UploadbyAge(DataLoader dl){
-        DL =dl;
-    }
+    private DataLoader dl;
     
     @Override
     public Object execute() throws IOException{   
         //сортировка по возрасту
         GroupCriterion ageCriterion = p -> p.getAge();
         DataGroup dg = new DataGroup(ageCriterion);
-        dg.addPersons(DL.getPerson());
+        dg.addPersons(dl.getPerson());
         return dg;
+    }
+    
+    @Override
+    public void setDataLoader(DataLoader dl) {
+        this.dl = dl;
     }
 }

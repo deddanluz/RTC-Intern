@@ -15,18 +15,19 @@ import java.io.IOException;
  * @author Даниил
  */
 public class UploadbyGroup implements Command {
-    private final DataLoader DL;
-    
-    public UploadbyGroup(DataLoader dl){
-        DL =dl;
-    }
+    private DataLoader dl;
     
     @Override
     public Object execute() throws IOException{
         //сортировка по классу
         GroupCriterion classroomCriterion = p -> p.getGroup();
         DataGroup dg = new DataGroup(classroomCriterion);
-        dg.addPersons(DL.getPerson());
+        dg.addPersons(dl.getPerson());
         return dg;
+    }
+    
+    @Override
+    public void setDataLoader(DataLoader dl) {
+        this.dl = dl;
     }
 }

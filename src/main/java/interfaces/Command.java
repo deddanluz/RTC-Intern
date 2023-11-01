@@ -10,7 +10,8 @@ import java.io.IOException;
  *
  * @author Даниил
  */
-@FunctionalInterface
+
 public interface Command {
     Object execute() throws IOException;
+    public void setDataLoader(DataLoader dl);
 }

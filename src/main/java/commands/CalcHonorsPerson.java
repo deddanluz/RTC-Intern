@@ -7,6 +7,7 @@ package commands;
 import data.groups.DataGroup;
 import objects.Person;
 import interfaces.Command;
+import interfaces.DataLoader;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -15,20 +16,21 @@ import java.util.Arrays;
  * @author Даниил
  */
 public class CalcHonorsPerson implements Command{
-    private final DataGroup DG;
+    private DataLoader dl;
     
-    public CalcHonorsPerson(DataGroup dg){
-        DG=dg;
-    }    
     //вычислить отличников старше 14 лет
     @Override
     public Object execute() throws IOException{
+        //загружаем с сортировкой по возрасту
+        Command cmd = new UploadbyAge();
+        cmd.setDataLoader(dl);
+        DataGroup dg = (DataGroup) cmd.execute();
         Person[] persons,
                  honors=new Person[1];
         int age=15,
             currentIndex=0;
         //получаем учеников старше 14 лет
-        while((persons=DG.getPersons(age))!=null){
+        while((persons=dg.getPersons(age))!=null){
             age=age+1;
             for (Person person : persons){
                 int[] grades = person.getGrades();
@@ -51,5 +53,10 @@ public class CalcHonorsPerson implements Command{
             }
         }
         return honors;
+    }
+    
+    @Override
+    public void setDataLoader(DataLoader dl) {
+        this.dl = dl;
     }
 }
