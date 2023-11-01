@@ -12,14 +12,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import services.StudentService;
-//calcAverageGrade -p "D:\YandexDisk\ARCHIVE\ДОКУМЕНТЫ\RTC\students.csv" -f Попов
 /**
  *
  * @author Даниил
  */
 public class RTCIntern {
     private static CommandBuilder CB;                                           //класс команд
-    private static String path;
+    private static String path;                                                 //путь к файлу с данными
     public static String family;                                                //фамилия для поиска
     
     public static void main(String[] args) {
@@ -30,17 +29,19 @@ public class RTCIntern {
             rtci.view(args[0]);
         } catch (IOException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException ex) {
             Logger.getLogger(RTCIntern.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ArrayIndexOutOfBoundsException exp){
-            Logger.getLogger(RTCIntern.class.getName()).log(Level.SEVERE, "Команда не указана! Введите 'help' для просмотра списка команд.", exp);
         } catch (NullPointerException exp){
-            if (!args[0].toLowerCase().equals("help")){
-                Logger.getLogger(RTCIntern.class.getName()).log(Level.SEVERE, "Не указаны обязательные аргументы! Введите 'help' для просмотра списка команд.", exp);
-            }else{
-                //при запросе 'help' вызываем команду напрямую
-                //т.к. не можем создать DataLoader, потому что
-                //Поставщик помощи отличается от поставщика персон
-                System.out.println(new commands.Help().execute());
-            }
+            try{
+                if (!args[0].toLowerCase().equals("help")){
+                    Logger.getLogger(RTCIntern.class.getName()).log(Level.SEVERE, "Не указаны обязательные аргументы! Введите 'help' для просмотра списка команд.", exp);
+                }else{
+                    //при запросе 'help' вызываем команду напрямую
+                    //т.к. не можем создать DataLoader, потому что
+                    //подгружаем помощь из класса
+                    System.out.println(new commands.Help().execute());
+                }
+            }catch (ArrayIndexOutOfBoundsException ex){
+                Logger.getLogger(RTCIntern.class.getName()).log(Level.SEVERE, "Команда не указана! Введите 'help' для просмотра списка команд.", ex);
+            } 
         }
     }
     //метод вывода в консоль

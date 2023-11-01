@@ -6,13 +6,6 @@ package commands;
 
 import interfaces.Command;
 import interfaces.DataLoader;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import services.StudentService;
 
 /**
  *
@@ -21,20 +14,20 @@ import services.StudentService;
 public class Help implements Command{
     @Override
     public Object execute(){
-        StringBuilder area;
-        try(BufferedReader buff = new BufferedReader(new FileReader("help.txt"))){
-            String line;
-            area = new StringBuilder();
-            while ((line=buff.readLine())!=null){
-                area.append(line);
-            }
-            return area.toString();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(StudentService.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(StudentService.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        return "Список команд:\nhelp - получение списка команд и полной информации о том,"
+                + "как вводить данные для получения правильного результата.\ncalcAverageGrade - вычисляет среднюю оценку в 10-11 классах на основе информации, полученной из файла формата csv."
+                + "\ncalcHonorsPerson - получает учеников старше 14 лет на основе информации, полученной из файла CSV."
+                + "\nsearchByFamily - поиск по фамилии по данным, полученным из CSV-файла."
+                + "\nОбщий вид: java -jar rtc-intern-X.X-SNAPSHOT.jar calcAverageGrade -p students.csv"
+                + "\njava -jar rtc-intern-X.X-SNAPSHOT.jar     command      -p     path"
+                + "\nАргументы:"
+                + "\n-p path"
+                + "\nпуть к файлу с данными по ученикам.\nНапример: -p students.csv"
+                + "\n-f family"
+                + "\nфамилия для поиска при вызове команды searchByFamily."
+                + "\nНапример: -f Попов"
+                + "\nАргументы могут следовать в любом порядке, однако каждый аргумент должен сначала предваряться указателем на аргумент,"
+                + "за которым должно следовать его значение. Перед аргументами должно быть указано имя команды.";
     }
 
     @Override
