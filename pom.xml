@@ -11,6 +11,14 @@
         <maven.compiler.target>20</maven.compiler.target>
         <exec.mainClass>ded_technologies.rtc.intern.RTCIntern</exec.mainClass>
     </properties>
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.6.0</version>
+        </dependency>
+    </dependencies>
     <build>
     <plugins>
         <plugin>

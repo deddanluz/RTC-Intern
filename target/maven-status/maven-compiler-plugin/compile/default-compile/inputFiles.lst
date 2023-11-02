@@ -1,7 +1,9 @@
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\builders\CommandBuilder.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\interfaces\GroupCriterion.java
+C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\commands\UploadByPgSQL.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\ded_technologies\rtc\intern\RTCIntern.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\interfaces\Command.java
+C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\interfaces\StorageService.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\objects\Person.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\commands\CalcHonorsPerson.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\commands\CalcAverageGrade.java
@@ -11,7 +13,9 @@ C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\sr
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\commands\UploadbyGroup.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\data\groups\DataGroup.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\interfaces\DataLoader.java
+C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\sql\PGSQLUploader.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\commands\UploadbyAge.java
+C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\services\JDBCStorageService.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\commands\Help.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\interfaces\TextLoader.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\commands\UploadByFirstLetter.java

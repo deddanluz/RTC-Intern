@@ -18,7 +18,8 @@ public class StudentService {
                 commands.UploadByFirstLetter.class,
                 commands.UploadbyAge.class,        
                 commands.UploadbyGroup.class,
-                commands.Help.class
+                commands.Help.class,
+                commands.UploadByPgSQL.class
         };
     private final DataLoader DL;                                                //поставщик данных
     //получаем поставщика данных

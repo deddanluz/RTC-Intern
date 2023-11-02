@@ -5,8 +5,8 @@
 package commands;
 
 import data.groups.DataGroup;
-import ded_technologies.rtc.intern.RTCIntern;
 import objects.Person;
+import ded_technologies.rtc.intern.RTCIntern;
 import interfaces.Command;
 import interfaces.DataLoader;
 import java.io.IOException;

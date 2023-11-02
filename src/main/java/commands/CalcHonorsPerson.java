@@ -4,8 +4,8 @@
  */
 package commands;
 
-import data.groups.DataGroup;
 import objects.Person;
+import data.groups.DataGroup;
 import interfaces.Command;
 import interfaces.DataLoader;
 import java.io.IOException;

@@ -5,14 +5,14 @@
 package interfaces;
 
 import objects.Person;
-
-
+import java.util.List;
 
 /**
  *
  * @author Даниил
  */
-@FunctionalInterface
-public interface GroupCriterion {
-    Object defineAGroup(Person person);
+public interface StorageService {
+    void add(String [] nameSubjects, Person[] person);
+    
+    List<Person> list(int group);
 }
