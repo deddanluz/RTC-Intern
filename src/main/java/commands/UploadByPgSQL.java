@@ -4,11 +4,9 @@
  */
 package commands;
 
-import objects.Person;
 import interfaces.Command;
 import interfaces.DataLoader;
 import java.io.IOException;
-import java.util.Arrays;
 import services.JDBCStorageService;
 
 /**
@@ -18,12 +16,9 @@ import services.JDBCStorageService;
 public class UploadByPgSQL implements Command {
     private DataLoader dl;
     @Override
-    public Object execute() throws IOException {
-        Person[] persons = dl.getPerson();
-        String[] headers = Arrays.copyOfRange(dl.getHeaders(), 4, dl.getHeaders().length);
+    public Object execute() throws IOException { 
         JDBCStorageService jdbc = new JDBCStorageService();
-        jdbc.add(headers, persons);
-        System.out.println("Person in DB!");
+        jdbc.add(dl);
         return jdbc;
     }
 

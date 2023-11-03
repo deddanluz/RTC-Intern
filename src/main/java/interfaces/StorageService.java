@@ -12,7 +12,7 @@ import java.util.List;
  * @author Даниил
  */
 public interface StorageService {
-    void add(String [] nameSubjects, Person[] person);
+    void add(DataLoader dl);
     
     List<Person> list(int group);
 }
