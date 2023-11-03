@@ -20,9 +20,9 @@ public class UploadbyGroup implements Command {
     @Override
     public Object execute() throws IOException{
         //сортировка по классу
-        GroupCriterion classroomCriterion = p -> p.getGroup();
+        GroupCriterion <Integer> classroomCriterion = s -> s.getGroup().getGroup();
         DataGroup dg = new DataGroup(classroomCriterion);
-        dg.addPersons(dl.getPerson());
+        dg.addStudents(dl.getStudents());
         return dg;
     }
     

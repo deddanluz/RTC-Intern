@@ -4,12 +4,13 @@
  */
 package commands;
 
-import objects.Person;
 import data.groups.DataGroup;
 import interfaces.Command;
 import interfaces.DataLoader;
 import java.io.IOException;
 import java.util.Arrays;
+import objects.Grade;
+import objects.Student;
 
 /**
  *
@@ -24,19 +25,19 @@ public class CalcHonorsPerson implements Command{
         Command cmd = new UploadbyAge();
         cmd.setDataLoader(dl);
         DataGroup dg = (DataGroup) cmd.execute();
-        Person[] persons,
-                 honors=new Person[1];
+        Student[] students,
+                 honors=new Student[1];
         int age=15,
             currentIndex=0;
         //получаем учеников старше 14 лет
-        while((persons=dg.getPersons(age))!=null){
+        while((students=dg.getStudents(age))!=null){
             age=age+1;
-            for (Person person : persons){
-                int[] grades = person.getGrades();
+            for (Student student : students){
+                Grade[] grades = student.getGrades();
                 double sum=0;
                 //суммируем оценки
-                for(int grade: grades){
-                    sum=sum+grade;
+                for(Grade grade: grades){
+                    sum=sum+grade.getGrade();
                 }
                 //отличник?
                 if (sum/grades.length==5){
@@ -46,15 +47,15 @@ public class CalcHonorsPerson implements Command{
                         honors = Arrays.copyOf(honors, honors.length+1);
                     }
                     //сохраняем отдельно
-                    honors[currentIndex]=person;
+                    honors[currentIndex]=student;
                     currentIndex++;
                 }
             }
         }
         StringBuilder output = new StringBuilder();
-        for (Person person : honors){
-            output.append(person.getFamily()).append("\t").append(person.getName()).append("\t")
-                    .append(person.getAge()).append("\t").append(person.getGroup()).append("\n");
+        for (Student student : honors){
+            output.append(student.getPerson().getFamily()).append("\t").append(student.getPerson().getName()).append("\t")
+                    .append(student.getPerson().getAge()).append("\t").append(student.getGroup().getGroup()).append("\n");
                     
         }
         return output.toString();

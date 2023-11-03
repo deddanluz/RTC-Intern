@@ -19,7 +19,8 @@ public class StudentService {
                 commands.UploadbyAge.class,        
                 commands.UploadbyGroup.class,
                 commands.Help.class,
-                commands.UploadByPgSQL.class
+                commands.UploadByPgSQL.class,
+                commands.SearchByFamilyFromPgSQL.class
         };
     private final DataLoader DL;                                                //поставщик данных
     //получаем поставщика данных

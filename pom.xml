@@ -18,6 +18,12 @@
             <artifactId>postgresql</artifactId>
             <version>42.6.0</version>
         </dependency>
+        <!--for progressbar-->
+        <dependency>
+            <groupId>me.tongfei</groupId>
+            <artifactId>progressbar</artifactId>
+            <version>0.10.0</version>
+        </dependency>
     </dependencies>
     <build>
     <plugins>
@@ -39,6 +45,8 @@
               <archive>
                 <manifest>
                   <mainClass>ded_technologies.rtc.intern.RTCIntern</mainClass>
+                  <addClasspath>true</addClasspath>
+                  <classpathPrefix>../lib/</classpathPrefix>
                 </manifest>
               </archive>
             </configuration>

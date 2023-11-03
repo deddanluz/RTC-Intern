@@ -20,9 +20,9 @@ public class UploadByFirstLetter implements Command {
     @Override
     public Object execute() throws IOException{
         //сортировка по первой букве фамилии
-        GroupCriterion firstLetterCriterion = p -> p.getFamily().charAt(0);
+        GroupCriterion <Character> firstLetterCriterion = s -> s.getPerson().getFamily().charAt(0);
         DataGroup dg = new DataGroup(firstLetterCriterion);
-        dg.addPersons(((DataLoader) dl).getPerson());
+        dg.addStudents(dl.getStudents());
         return dg;
     }
 

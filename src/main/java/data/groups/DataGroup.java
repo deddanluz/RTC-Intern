@@ -4,7 +4,7 @@
  */
 package data.groups;
 
-import objects.Person;
+import objects.Student;
 import interfaces.GroupCriterion;
 import java.util.Arrays;
 
@@ -14,7 +14,7 @@ import java.util.Arrays;
  */
 public class DataGroup {
     private final GroupCriterion CRITERION;                                             //реализация критерия
-    private Person[][] persons = new Person[12][];                                      //СОРТИРОВАННЫЙ массив учеников
+    private Student[][] students = new Student[12][];                                   //СОРТИРОВАННЫЙ массив учеников
     private int[] lastNNIndex=new int[12];                                              //последние ненулевые индексы
     private final char[] ALPHABET = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ".toCharArray();  //алфавит
     
@@ -23,46 +23,46 @@ public class DataGroup {
         CRITERION = criterion;
     }
     //добавляем и сортируем учеников
-    public void addPersons(Person[] ps) {
+    public void addStudents(Student[] st) {
         //для каждого ученика
-        for (Person person : ps){
+        for (Student student : st){
             //получаем критерий
-            Object criterion = CRITERION.defineAGroup(person);
+            Object criterion = CRITERION.defineAGroup(student);
             int key=-1;
             //вычисляем индекс массива
             if (criterion instanceof Character){
                 //если по первой букве фамилии
-                key = Arrays.binarySearch(ALPHABET, person.getFamily().charAt(0));
+                key = Arrays.binarySearch(ALPHABET, student.getPerson().getFamily().charAt(0));
             }else if (criterion instanceof Integer){
                 //если по классу или возрасту
                 key = (int) criterion-1;
             }
             //если индекс больше длины массива
-            if (key>=persons.length){
+            if (key>=students.length){
                 //увеличиваем
-                persons=Arrays.copyOf(persons, persons.length+(key+1-persons.length));
+                students=Arrays.copyOf(students, students.length+(key+1-students.length));
                 lastNNIndex=Arrays.copyOf(lastNNIndex, lastNNIndex.length+(key+1-lastNNIndex.length));
             }
             //если одномерный массив не инициализирован
-            if (persons[key]==null){
+            if (students[key]==null){
                 //иницализируем
-                persons[key]=new Person[5000];
-            }else if (lastNNIndex[key]>=persons[key].length){
+                students[key]=new Student[5000];
+            }else if (lastNNIndex[key]>=students[key].length){
                 //если массив полностью заполнен - увеличиваем размер
                 //сложность Arrays.copyOf О(n). поэтому неоходимо минимизировать его использование
                 //для этого берем достаточно большую добавочную ступень (100%)
                 //а при выдаче еще раз используем, отсекая пустые поля
                 //всего за время работы используем Arrays.copyOf около 2-5 раз
-                persons[key]=Arrays.copyOf(persons[key], persons[key].length+5000);
+                students[key]=Arrays.copyOf(students[key], students[key].length+5000);
             }
             //сохраняем ссылку
-            persons[key][lastNNIndex[key]]=person;
+            students[key][lastNNIndex[key]]=student;
             //увеличиваем индекс
             lastNNIndex[key]=lastNNIndex[key]+1;
         }
     }
     //получаем отсортированных учеников
-    public Person[] getPersons(Object key){
+    public Student[] getStudents(Object key){
         //при вводе несущ. фамилии
         try{
             //выводим в соответсвии с кол-вом ненулевых значений
@@ -78,7 +78,7 @@ public class DataGroup {
             }
             //доступ к элементу массива сложность O(1)
             //при выдаче еще раз используем Arrays.copyOf О(n), отсекая пустые поля
-            return Arrays.copyOf(persons[index], lastNNIndex[index]);
+            return Arrays.copyOf(students[index], lastNNIndex[index]);
         }catch (ArrayIndexOutOfBoundsException | NullPointerException exc){
             return null;    
         }

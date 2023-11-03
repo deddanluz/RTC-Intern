@@ -4,7 +4,7 @@
  */
 package interfaces;
 
-import objects.Person;
+import objects.Student;
 
 
 
@@ -13,6 +13,6 @@ import objects.Person;
  * @author Даниил
  */
 @FunctionalInterface
-public interface GroupCriterion {
-    Object defineAGroup(Person person);
+public interface GroupCriterion <T> {
+    T defineAGroup(Student student);
 }

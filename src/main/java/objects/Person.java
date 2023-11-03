@@ -4,42 +4,41 @@
  */
 package objects;
 
-import java.util.Arrays;
+import dto.idEntity;
 
 /**
  *
  * @author Даниил
  */
-public class Person {
+public class Person extends idEntity{
     private String family, name;
-    private int age, group;
-    private int[] grades;
-    
-    public Person (String family, String name, String age, String group, String[] grades){
-        this.family = family;
-        this.name = name;
-        this.age = Integer.parseInt(age);
-        this.group = Integer.parseInt(group);
-        this.grades = Arrays.stream(grades).mapToInt(Integer::parseInt).toArray();
-    }
+    private int age;
     
     public String getFamily(){
         return family;
+    }
+    
+    public void setFamily(String family){
+        this.family=family;
     }
     
     public String getName(){
         return name;
     }
     
+    public void setName(String name){
+        this.name=name;
+    }
+    
     public int getAge(){
         return age;
     }
     
-    public int getGroup(){
-        return group;
+    public void setAge(int age){
+        this.age=age;
     }
     
-    public int[] getGrades(){
-        return grades;
+    public void setAge(String age){
+        this.age=Integer.parseInt(age);
     }
 }

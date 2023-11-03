@@ -4,15 +4,15 @@
  */
 package interfaces;
 
-import objects.Person;
 import java.util.List;
+import objects.Student;
 
 /**
  *
  * @author Даниил
  */
-public interface StorageService {
+public interface StorageService <T> {
     void add(DataLoader dl);
     
-    List<Person> list(int group);
+    List<Student> list(T t);
 }

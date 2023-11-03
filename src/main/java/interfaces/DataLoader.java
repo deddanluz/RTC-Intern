@@ -4,8 +4,8 @@
  */
 package interfaces;
 
-import objects.Person;
 import java.io.IOException;
+import objects.Student;
 
 /**
  *
@@ -13,5 +13,5 @@ import java.io.IOException;
  */
 public interface DataLoader {
     public String[] getHeaders() throws IOException;
-    public Person[] getPerson() throws IOException;
+    public Student[] getStudents() throws IOException;
 }

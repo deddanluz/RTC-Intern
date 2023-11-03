@@ -20,9 +20,9 @@ public class UploadbyAge implements Command {
     @Override
     public Object execute() throws IOException{   
         //сортировка по возрасту
-        GroupCriterion ageCriterion = p -> p.getAge();
+        GroupCriterion <Integer> ageCriterion = s -> s.getPerson().getAge();
         DataGroup dg = new DataGroup(ageCriterion);
-        dg.addPersons(dl.getPerson());
+        dg.addStudents(dl.getStudents());
         return dg;
     }
     

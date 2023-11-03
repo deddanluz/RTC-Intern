@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import objects.Grade;
+import objects.Group;
+import objects.Student;
 
 /**
  *
@@ -20,7 +23,7 @@ import java.util.logging.Logger;
  */
 public class DataSupplierCSV implements DataLoader{
     private final BufferedReader READER;                                        //буффер чтения
-    private Person[] persons = new Person[10000];                               //несортированный массив
+    private Student[] students = new Student[10000];                               //несортированный массив
     private int lastNNIndex=0;                                                  //последний ненулевой индекс массива
     private String[] headers;                                                   //заголовки
     private int iLine=-1;                                                       //позиция по строке
@@ -54,18 +57,30 @@ public class DataSupplierCSV implements DataLoader{
     }
     
     @Override
-    public Person[] getPerson() throws IOException{
+    public Student[] getStudents() throws IOException{
         String[] line;
         //получаем все строки с данными
         while ((line = getNextData()) != null) {
             //увеличиваем размер
-            if (iLine>=persons.length){
-                persons = Arrays.copyOf(persons, persons.length+5000);
+            if (iLine>=students.length){
+                students = Arrays.copyOf(students, students.length+5000);
             }
             //если строка с заголовкам прочитана
             if (iLine>0){
                 //добавляем ученика
-                persons[lastNNIndex]=new Person (line[0], line[1], line[2], line[3], Arrays.copyOfRange(line, 4, line.length));
+                Person person = new Person();
+                person.setFamily(line[0]);
+                person.setName(line[1]);
+                person.setAge(line[2]);
+                Group group = new Group();
+                group.setGroup(line[3]);
+                String[] sGrades = Arrays.copyOfRange(line, 4, line.length);
+                Grade[] grades=new Grade[sGrades.length];
+                for (int i=0; i<grades.length;i++){
+                    grades[i] = new Grade();
+                    grades[i].setGrade(sGrades[i]);
+                }
+                students[lastNNIndex]=new Student (person, group, grades);
                 //увеличиваем индекс
                 lastNNIndex=lastNNIndex+1;
             }else{
@@ -74,6 +89,6 @@ public class DataSupplierCSV implements DataLoader{
             }
 	}
         //взвращаем после чтения и при повторных обращениях
-        return Arrays.copyOf(persons, lastNNIndex);
+        return Arrays.copyOf(students, lastNNIndex);
     }
 }

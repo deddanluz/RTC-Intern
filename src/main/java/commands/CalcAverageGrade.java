@@ -5,10 +5,11 @@
 package commands;
 
 import data.groups.DataGroup;
-import objects.Person;
 import interfaces.Command;
 import interfaces.DataLoader;
 import java.io.IOException;
+import objects.Grade;
+import objects.Student;
 
 /**
  *
@@ -20,24 +21,24 @@ public class CalcAverageGrade implements Command{
     @Override
     public String execute() throws IOException{
         //загружаем с сортировкой по группе
-        Command cmd = new UploadbyGroup();
+        Command <DataGroup> cmd = new UploadbyGroup();
         cmd.setDataLoader(dl);
-        DataGroup dg = (DataGroup) cmd.execute();
+        DataGroup dg = cmd.execute();
         //получаем учеников 10 и 11 классов
-        Person[][] personSH = {dg.getPersons(10),
-                               dg.getPersons(11)};
+        Student[][] studentSH = {dg.getStudents(10),
+                               dg.getStudents(11)};
         double sum=0;
         //суммируем все оценки у всех учеников
-        for (Person[] persons : personSH){
-            for (Person person : persons){
-                int[] grades = person.getGrades();
-                for(int grade: grades){
-                    sum=sum+grade;
+        for (Student[] students : studentSH){
+            for (Student student : students){
+                Grade[] grades = student.getGrades();
+                for(Grade grade: grades){
+                    sum=sum+grade.getGrade();
                 }
             }
         }
         //делим на общее кол-во оценок и получаем среднее
-        return ""+sum/((personSH[0].length+personSH[1].length)*personSH[0][0].getGrades().length);
+        return ""+sum/((studentSH[0].length+studentSH[1].length)*studentSH[0][0].getGrades().length);
     }
     
     @Override

@@ -5,7 +5,7 @@
 package commands;
 
 import data.groups.DataGroup;
-import objects.Person;
+import objects.Student;
 import ded_technologies.rtc.intern.RTCIntern;
 import interfaces.Command;
 import interfaces.DataLoader;
@@ -22,28 +22,28 @@ public class SearchByFamily implements Command{
     @Override
     public String execute() throws IOException{
         //загружаем с сортировкой по первой букве фамилии
-        Command cmd = new UploadByFirstLetter();
+        Command <DataGroup> cmd = new UploadByFirstLetter();
         cmd.setDataLoader(dl);
-        DataGroup dg = (DataGroup) cmd.execute();
+        DataGroup dg = cmd.execute();
         //получаем всех учеников с фамилией
-        Person[] persons = dg.getPersons(""+RTCIntern.family.charAt(0)),
-                 search=new Person[10];
+        Student[] students = dg.getStudents(""+RTCIntern.family.charAt(0)),
+                 search=new Student[10];
         int currentIndex=0;
-        for (Person person: persons){
+        for (Student student: students){
             //проверяем на точное совпадение
-            if (person.getFamily().equals(RTCIntern.family)){
+            if (student.getPerson().getFamily().equals(RTCIntern.family)){
                 if (currentIndex>=search.length){
                     search = Arrays.copyOf(search, search.length+1);
                 }
                 //сохраняем отдельно
-                search[currentIndex]=person;
+                search[currentIndex]=student;
                 currentIndex++;
             }
         }
         StringBuilder output = new StringBuilder();
-        for (Person person : search){
-            output.append(person.getFamily()).append("\t").append(person.getName()).append("\t")
-                    .append(person.getAge()).append("\t").append(person.getGroup()).append("\n");
+        for (Student student : search){
+            output.append(student.getPerson().getFamily()).append("\t").append(student.getPerson().getName()).append("\t")
+                    .append(student.getPerson().getAge()).append("\t").append(student.getGroup().getGroup()).append("\n");
                     
         }
         return output.toString();
