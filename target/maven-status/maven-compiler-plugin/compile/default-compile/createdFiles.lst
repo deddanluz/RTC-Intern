@@ -3,13 +3,13 @@ objects\Student.class
 commands\UploadByPgSQL.class
 commands\Help.class
 objects\Subject.class
-sql\PGSQLUploader.class
 commands\SearchByFamilyFromPgSQL.class
 commands\UploadbyAge.class
 commands\CalcAverageGrade.class
 data\suppliers\DataSupplierCSV.class
 builders\CommandBuilder.class
 services\JDBCStorageService$TransactionScript.class
+commands\CalcHonorsPersonFromPgSQL.class
 interfaces\TextLoader.class
 objects\Grade.class
 interfaces\DataLoader.class

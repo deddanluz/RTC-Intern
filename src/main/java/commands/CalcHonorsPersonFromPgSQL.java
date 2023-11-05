@@ -4,7 +4,6 @@
  */
 package commands;
 
-import ded_technologies.rtc.intern.RTCIntern;
 import interfaces.Command;
 import interfaces.DataLoader;
 import interfaces.StorageService;
@@ -17,18 +16,27 @@ import services.JDBCStorageService;
  *
  * @author Даниил
  */
-public class SearchByFamilyFromPgSQL implements Command {
+public class CalcHonorsPersonFromPgSQL implements Command {
 
     @Override
     public Object execute() throws IOException {
-        StorageService <String> jdbc = new JDBCStorageService();
-        List<Student> search = jdbc.list(RTCIntern.family);
+        StorageService <Integer> jdbc = new JDBCStorageService();
+        //получаем учеников старше 14 лет
+        int age=15;
+        List<Student> students;
         StringBuilder output = new StringBuilder();
-        for (Student student : search){
-            output.append(student.getPerson().getFamily()).append("\t").append(student.getPerson().getName()).append("\t")
+        while(!(students=jdbc.list(age)).isEmpty()){
+            age=age+1;
+            for (Student student : students){
+                double grade = student.getAverageGrade();
+                if (grade==5){
+                    output.append(student.getPerson().getFamily()).append("\t").append(student.getPerson().getName()).append("\t")
                     .append(student.getGroup().getGroup()).append("\t").append(student.getAverageGrade()).append("\n");
+                }
+            }
         }
         return output.toString();
+        
     }
 
     @Override

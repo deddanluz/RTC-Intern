@@ -20,7 +20,9 @@ public class StudentService {
                 commands.UploadbyGroup.class,
                 commands.Help.class,
                 commands.UploadByPgSQL.class,
-                commands.SearchByFamilyFromPgSQL.class
+                commands.SearchByFamilyFromPgSQL.class,
+                commands.CalcAverageGradeFromPgSQL.class,
+                commands.CalcHonorsPersonFromPgSQL.class
         };
     private final DataLoader DL;                                                //поставщик данных
     //получаем поставщика данных

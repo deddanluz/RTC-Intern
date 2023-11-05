@@ -5,7 +5,6 @@ C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\sr
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\commands\UploadbyGroup.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\interfaces\DataLoader.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\dto\idEntity.java
-C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\sql\PGSQLUploader.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\commands\Help.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\interfaces\TextLoader.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\objects\Student.java
@@ -24,5 +23,6 @@ C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\sr
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\commands\UploadbyAge.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\commands\CalcAverageGradeFromPgSQL.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\commands\SearchByFamilyFromPgSQL.java
+C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\commands\CalcHonorsPersonFromPgSQL.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\services\JDBCStorageService.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\commands\UploadByFirstLetter.java

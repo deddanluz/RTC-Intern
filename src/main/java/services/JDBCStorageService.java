@@ -16,7 +16,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import objects.Grade;
@@ -42,11 +44,14 @@ public class JDBCStorageService implements StorageService {
     @Override
     public List<Student> list(Object obj) {
         if (obj instanceof String){
+            //поиск по фамилии
             return TransactionScript.getInstance().listStudents(obj.toString());
         }else if (obj instanceof Integer){
-            
+            //поиск по возрасту
+            return TransactionScript.getInstance().listStudents((int) obj);
         }else if (obj instanceof Group){
-            
+            //поиск по группе
+            return TransactionScript.getInstance().listStudents((Group) obj);
         }
         return null;
     }
@@ -75,9 +80,21 @@ public class JDBCStorageService implements StorageService {
         public List<Student> listStudents(Group group) throws RuntimeException{
             List<Student> output = new ArrayList<>();
             try{
-                try(ProgressBar pgb = new ProgressBar("Searching in PgSQL", output.size()+1)){
+                try{
                     connection.setAutoCommit(false);
-                    //тело метода
+                    PreparedStatement statement = connection.prepareStatement(
+                        "SELECT students.id, students.family, students.name, students.age, groups.id, groups.number, subjects.id, subjects.subject, performance.id, performance.grade " +
+                        "FROM intern.students " +
+                        "INNER JOIN intern.groups ON students.group_id = groups.id " +
+                        "LEFT JOIN intern.performance ON students.id = performance.student_id " +
+                        "LEFT JOIN intern.subjects ON performance.subject_id = subjects.id " +
+                        "WHERE groups.number = ?"
+                    );
+                    statement.setInt(1, group.getGroup());
+                    ResultSet resultSet = statement.executeQuery();
+
+                    // Добавляем студентов из Map в список результатов
+                    output.addAll(handler(resultSet).values());
                     connection.commit();
                 } catch (SQLException ex) {
                     connection.rollback();
@@ -93,9 +110,21 @@ public class JDBCStorageService implements StorageService {
         public List<Student> listStudents(int age) throws RuntimeException{
             List<Student> output = new ArrayList<>();
             try{
-                try(ProgressBar pgb = new ProgressBar("Searching in PgSQL", output.size()+1)){
+                try{
                     connection.setAutoCommit(false);
-                    //тело метода
+                    PreparedStatement statement = connection.prepareStatement(
+                        "SELECT students.id, students.family, students.name, students.age, groups.id, groups.number, subjects.id, subjects.subject, performance.id, performance.grade " +
+                        "FROM intern.students " +
+                        "INNER JOIN intern.groups ON students.group_id = groups.id " +
+                        "LEFT JOIN intern.performance ON students.id = performance.student_id " +
+                        "LEFT JOIN intern.subjects ON performance.subject_id = subjects.id " +
+                        "WHERE students.age = ?"
+                    );
+                    statement.setInt(1, age);
+                    ResultSet resultSet = statement.executeQuery();
+
+                    // Добавляем студентов из Map в список результатов
+                    output.addAll(handler(resultSet).values());
                     connection.commit();
                 } catch (SQLException ex) {
                     connection.rollback();
@@ -111,57 +140,25 @@ public class JDBCStorageService implements StorageService {
         public List<Student> listStudents(String family) throws RuntimeException{
             List<Student> output = new ArrayList<>();
             try{
-                try(ProgressBar pgb = new ProgressBar("Searching in PgSQL", output.size()+1)){
+                try{
+
                     connection.setAutoCommit(false);
-                    //запрашиваем всех по фамилии
-                    PreparedStatement statement = connection.prepareStatement("SELECT * FROM intern.students WHERE family='"+family+"'");
-                    ResultSet rSet = statement.executeQuery();
-                    //текущая персона
-                    Person person=null;
-                    //текущая група
-                    Group group = new Group();
-                    //получаем информацию для персон и создаем их
-                    //группу и оценки пока null
-                    while (rSet.next()){
-                        person = new Person();
-                        person.setId(rSet.getInt("id"));
-                        person.setFamily(rSet.getString("family"));
-                        person.setName(rSet.getString("name"));
-                        person.setAge(rSet.getInt("age"));
-                        //получаем индекс группы
-                        group.setId(rSet.getInt("group_id"));
-                        
-                        //запрашиваем группу
-                        statement = connection.prepareStatement("SELECT * FROM intern.groups WHERE id="+group.getId());
-                        ResultSet rSetGroup = statement.executeQuery();
-                        //получаем
-                        while (rSetGroup.next()){
-                            group.setGroup(rSetGroup.getInt("number"));
-                        }
-                        
-                        //запрашиваем предметы
-                        statement = connection.prepareStatement("SELECT * FROM intern.groups_subjects WHERE group_id="+group.getId());
-                        ResultSet rSetSubjects = statement.executeQuery();
-                        Grade grade;
-                        List<Grade> grades = new ArrayList<>();
-                        //по предмету получаем
-                        while (rSetSubjects.next()){
-                            //запрашиваем оценки
-                            statement = connection.prepareStatement("SELECT * FROM intern.performance WHERE student_id="+person.getId()+" AND subject_id="+rSetSubjects.getInt("subject_id"));
-                            ResultSet rSetGrades = statement.executeQuery();
-                            //по оценке получаем
-                            while (rSetGrades.next()){
-                                grade = new Grade();
-                                grade.setGrade(rSetGrades.getInt("grade"));
-                                grades.add(grade);
-                            }   
-                        }
-                        //создаем ученика
-                        Grade[] gradesArray = new Grade[grades.size()];
-                        grades.toArray(gradesArray);
-                        output.add(new Student(person, group, gradesArray));
-                        pgb.step();
-                    }
+                    
+                    // Подготавливаем SQL запрос для получения информации о студентах
+                    PreparedStatement statement = connection.prepareStatement(
+                        "SELECT students.id, students.family, students.name, students.age, groups.id, groups.number, subjects.id, subjects.subject, performance.id, performance.grade " +
+                        "FROM intern.students " +
+                        "INNER JOIN intern.groups ON students.group_id = groups.id " +
+                        "LEFT JOIN intern.performance ON students.id = performance.student_id " +
+                        "LEFT JOIN intern.subjects ON performance.subject_id = subjects.id " +
+                        "WHERE students.family = ?"
+                    );
+                    statement.setString(1, family);
+                    ResultSet resultSet = statement.executeQuery();
+
+                    // Добавляем студентов из Map в список результатов
+                    output.addAll(handler(resultSet).values());
+                    
                     connection.commit();
                 } catch (SQLException ex) {
                     connection.rollback();
@@ -173,6 +170,49 @@ public class JDBCStorageService implements StorageService {
             return output;
         }
         
+        private Map<Integer, Student> handler(ResultSet resultSet) throws SQLException{
+            // Обрабатываем результаты запроса
+            Map<Integer, Student> studentMap = new HashMap<>();
+            Person person;
+            Group group;
+            Subject subject;
+            while (resultSet.next()) {
+                person = new Person();
+                person.setId(resultSet.getInt(1));
+                person.setFamily(resultSet.getString(2));
+                person.setName(resultSet.getString(3));
+                person.setAge(resultSet.getInt(4));
+                group = new Group();
+                group.setId(resultSet.getInt(5));
+                group.setGroup(resultSet.getInt(6));
+                subject = new Subject();
+                subject.setId(resultSet.getInt(7));
+                subject.setTitle(resultSet.getString(8));
+
+                // Если студент уже присутствует в Map, обновляем его оценки, иначе создаем нового студента
+                if (studentMap.containsKey(person.getId())) {
+                    Student student = studentMap.get(person.getId());
+                    Grade grade = new Grade();
+                    grade.setId(resultSet.getInt(9));
+                    grade.setGrade(resultSet.getInt(10));
+                    Grade[] grades = new Grade[student.getGrades().length + 1];
+                    System.arraycopy(student.getGrades(),0, grades, 0, student.getGrades().length);
+                    grades[student.getGrades().length]=grade;
+                    student = new Student(student.getPerson(), student.getGroup(), grades);
+                    studentMap.replace(person.getId(), student);
+                } else {
+                    Grade[] grades = new Grade[1];
+                    Grade grade = new Grade();
+                    grade.setId(resultSet.getInt(9));
+                    grade.setGrade(resultSet.getInt(10));
+                    grades[0]=grade;
+                    Student student = new Student(person, group, grades);
+                    studentMap.put(student.getPerson().getId(), student);
+                }
+            }
+            return studentMap;        
+        }
+        
         public void addStudents(DataLoader dl) throws IOException, RuntimeException{
             int i, references_subject_id;
             try(ProgressBar pgb = new ProgressBar("Uploading to PgSQL", dl.getStudents().length)){
@@ -182,7 +222,8 @@ public class JDBCStorageService implements StorageService {
                         try{
                             connection.setAutoCommit(false);
                             //проверяем, записали ли уже группу
-                            PreparedStatement getGroup = connection.prepareStatement("SELECT * FROM intern.groups WHERE number="+dl.getStudents()[i].getGroup().getGroup());
+                            PreparedStatement getGroup = connection.prepareStatement("SELECT * FROM intern.groups WHERE number=?");
+                            getGroup.setInt(1, dl.getStudents()[i].getGroup().getGroup());
                             ResultSet rs = getGroup.executeQuery();//для проверки
                             while(rs.next()){
                                 //сразу получем id
@@ -225,7 +266,8 @@ public class JDBCStorageService implements StorageService {
                             }
                             for (int j=0; j<subjects.length; j++){
                                 //пробуем получить предмет
-                                PreparedStatement getSubjects = connection.prepareStatement("SELECT * FROM intern.subjects WHERE subject='"+subjects[j].getTitle()+"'");
+                                PreparedStatement getSubjects = connection.prepareStatement("SELECT * FROM intern.subjects WHERE subject=");
+                                getSubjects.setString(1, subjects[j].getTitle());
                                 rs = getSubjects.executeQuery();
                                 while(rs.next()){
                                     //сразу получем id
@@ -245,7 +287,9 @@ public class JDBCStorageService implements StorageService {
                                     }
                                 }
                                 //проверяем связь между предметом и группой
-                                PreparedStatement getGroups_subjects = connection.prepareStatement("SELECT * FROM intern.groups_subjects WHERE subject_id="+subjects[j].getId()+" AND group_id="+dl.getStudents()[i].getGroup().getId());
+                                PreparedStatement getGroups_subjects = connection.prepareStatement("SELECT * FROM intern.groups_subjects WHERE subject_id=? AND group_id=?");
+                                getGroups_subjects.setInt(1, subjects[j].getId());
+                                getGroups_subjects.setInt(2, dl.getStudents()[i].getGroup().getId());
                                 rs = getGroups_subjects.executeQuery();
                                 while(rs.next()){
                                     //сразу получем id
