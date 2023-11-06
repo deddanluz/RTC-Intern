@@ -14,6 +14,5 @@ commands\CalcHonorsPerson.class
 data\suppliers\DataSupplierCSV.class
 servlets\RTCInternServlet.class
 builders\CommandBuilder.class
-interfaces\TextLoader.class
 commands\UploadbyGroup.class
 interfaces\DataLoader.class
