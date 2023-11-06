@@ -5,6 +5,7 @@ C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\sr
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\objects\Person.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\commands\CalcHonorsPerson.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\commands\CalcAverageGrade.java
+C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\servlets\RTCInternServlet.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\commands\SearchByFamily.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\services\StudentService.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\data\suppliers\DataSupplierCSV.java
@@ -12,6 +13,7 @@ C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\sr
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\data\groups\DataGroup.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\interfaces\DataLoader.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\commands\UploadbyAge.java
+C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\objects\Request.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\commands\Help.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\interfaces\TextLoader.java
 C:\Users\Даниил\OneDrive\Документы\NetBeansProjects\RTC-Intern\src\main\java\commands\UploadByFirstLetter.java
