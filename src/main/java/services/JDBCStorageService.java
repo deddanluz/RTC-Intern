@@ -60,8 +60,33 @@ public class JDBCStorageService implements StorageService {
         private String url = "jdbc:postgresql://localhost/intern",
                        login = "postgres",
                        password = "postgresql";
-        
         private Connection connection;
+        private final String GET_BY_GROUP =  "SELECT students.id, students.family, students.name, students.age, groups.id, groups.number, subjects.id, subjects.subject, performance.id, performance.grade " +
+                        "FROM intern.students " +
+                        "INNER JOIN intern.groups ON students.group_id = groups.id " +
+                        "LEFT JOIN intern.performance ON students.id = performance.student_id " +
+                        "LEFT JOIN intern.subjects ON performance.subject_id = subjects.id " +
+                        "WHERE groups.number = ?";
+        private final String GET_BY_AGE = "SELECT students.id, students.family, students.name, students.age, groups.id, groups.number, subjects.id, subjects.subject, performance.id, performance.grade " +
+                        "FROM intern.students " +
+                        "INNER JOIN intern.groups ON students.group_id = groups.id " +
+                        "LEFT JOIN intern.performance ON students.id = performance.student_id " +
+                        "LEFT JOIN intern.subjects ON performance.subject_id = subjects.id " +
+                        "WHERE students.age = ?";
+        private final String GET_BY_FAMILY = "SELECT students.id, students.family, students.name, students.age, groups.id, groups.number, subjects.id, subjects.subject, performance.id, performance.grade " +
+                        "FROM intern.students " +
+                        "INNER JOIN intern.groups ON students.group_id = groups.id " +
+                        "LEFT JOIN intern.performance ON students.id = performance.student_id " +
+                        "LEFT JOIN intern.subjects ON performance.subject_id = subjects.id " +
+                        "WHERE students.family = ?";
+        private final String GET_GROUP_SQL = "SELECT * FROM intern.groups WHERE number=?";
+        private final String ADD_GROUP = "INSERT INTO intern.groups (number) VALUES (?)";
+        private final String ADD_PERSON = "INSERT INTO intern.students (family,name,age,group_id) VALUES (?, ?, ?, ?)";
+        private final String GET_SUBJECT = "SELECT * FROM intern.subjects WHERE subject=?";
+        private final String ADD_SUBJECT = "INSERT INTO intern.subjects (subject) VALUES (?)";
+        private final String GET_GROUPS_SUBJECTS = "SELECT * FROM intern.groups_subjects WHERE subject_id=? AND group_id=?";
+        private final String ADD_GROUPS_SUBJECTS = "INSERT INTO intern.groups_subjects (group_id, subject_id) VALUES (?, ?)";
+        private final String ADD_PERFORMANCE = "INSERT INTO intern.performance (student_id, subject_id, grade) VALUES (?, ?, ?)";
         
         public TransactionScript(){
             try{
@@ -80,28 +105,18 @@ public class JDBCStorageService implements StorageService {
         public List<Student> listStudents(Group group) throws RuntimeException{
             List<Student> output = new ArrayList<>();
             try{
-                try{
-                    connection.setAutoCommit(false);
-                    PreparedStatement statement = connection.prepareStatement(
-                        "SELECT students.id, students.family, students.name, students.age, groups.id, groups.number, subjects.id, subjects.subject, performance.id, performance.grade " +
-                        "FROM intern.students " +
-                        "INNER JOIN intern.groups ON students.group_id = groups.id " +
-                        "LEFT JOIN intern.performance ON students.id = performance.student_id " +
-                        "LEFT JOIN intern.subjects ON performance.subject_id = subjects.id " +
-                        "WHERE groups.number = ?"
-                    );
+                connection.setAutoCommit(false);
+                ResultSet resultSet;
+                try (PreparedStatement statement = connection.prepareStatement(GET_BY_GROUP)) {
                     statement.setInt(1, group.getGroup());
-                    ResultSet resultSet = statement.executeQuery();
-
+                    resultSet = statement.executeQuery();
+                    
                     // Добавляем студентов из Map в список результатов
                     output.addAll(handler(resultSet).values());
-                    connection.commit();
-                } catch (SQLException ex) {
-                    connection.rollback();
-                    Logger.getLogger(JDBCStorageService.class.getName()).log(Level.SEVERE, null, ex);
-                    throw new RuntimeException(ex);
+                    resultSet.close();
                 }
             } catch (SQLException ex) {
+                Logger.getLogger(JDBCStorageService.class.getName()).log(Level.SEVERE, null, ex);
                 throw new RuntimeException(ex);
             }
             return output;
@@ -110,28 +125,18 @@ public class JDBCStorageService implements StorageService {
         public List<Student> listStudents(int age) throws RuntimeException{
             List<Student> output = new ArrayList<>();
             try{
-                try{
-                    connection.setAutoCommit(false);
-                    PreparedStatement statement = connection.prepareStatement(
-                        "SELECT students.id, students.family, students.name, students.age, groups.id, groups.number, subjects.id, subjects.subject, performance.id, performance.grade " +
-                        "FROM intern.students " +
-                        "INNER JOIN intern.groups ON students.group_id = groups.id " +
-                        "LEFT JOIN intern.performance ON students.id = performance.student_id " +
-                        "LEFT JOIN intern.subjects ON performance.subject_id = subjects.id " +
-                        "WHERE students.age = ?"
-                    );
+                connection.setAutoCommit(false);
+                ResultSet resultSet;
+                try (PreparedStatement statement = connection.prepareStatement(GET_BY_AGE)) {
                     statement.setInt(1, age);
-                    ResultSet resultSet = statement.executeQuery();
-
+                    resultSet = statement.executeQuery();
+                    
                     // Добавляем студентов из Map в список результатов
                     output.addAll(handler(resultSet).values());
-                    connection.commit();
-                } catch (SQLException ex) {
-                    connection.rollback();
-                    Logger.getLogger(JDBCStorageService.class.getName()).log(Level.SEVERE, null, ex);
-                    throw new RuntimeException(ex);
+                    resultSet.close();
                 }
             } catch (SQLException ex) {
+                Logger.getLogger(JDBCStorageService.class.getName()).log(Level.SEVERE, null, ex);
                 throw new RuntimeException(ex);
             }
             return output;
@@ -140,31 +145,19 @@ public class JDBCStorageService implements StorageService {
         public List<Student> listStudents(String family) throws RuntimeException{
             List<Student> output = new ArrayList<>();
             try{
-                try{
-
-                    connection.setAutoCommit(false);
-                    
-                    // Подготавливаем SQL запрос для получения информации о студентах
-                    PreparedStatement statement = connection.prepareStatement(
-                        "SELECT students.id, students.family, students.name, students.age, groups.id, groups.number, subjects.id, subjects.subject, performance.id, performance.grade " +
-                        "FROM intern.students " +
-                        "INNER JOIN intern.groups ON students.group_id = groups.id " +
-                        "LEFT JOIN intern.performance ON students.id = performance.student_id " +
-                        "LEFT JOIN intern.subjects ON performance.subject_id = subjects.id " +
-                        "WHERE students.family = ?"
-                    );
+                connection.setAutoCommit(false);
+                ResultSet resultSet;
+                try ( // Подготавливаем SQL запрос для получения информации о студентах
+                        PreparedStatement statement = connection.prepareStatement(GET_BY_FAMILY)) {
                     statement.setString(1, family);
-                    ResultSet resultSet = statement.executeQuery();
-
+                    resultSet = statement.executeQuery();
+                    
                     // Добавляем студентов из Map в список результатов
                     output.addAll(handler(resultSet).values());
-                    
-                    connection.commit();
-                } catch (SQLException ex) {
-                    connection.rollback();
-                    throw new RuntimeException(ex);
+                    resultSet.close();
                 }
             } catch (SQLException ex) {
+                Logger.getLogger(JDBCStorageService.class.getName()).log(Level.SEVERE, null, ex);
                 throw new RuntimeException(ex);
             }
             return output;
@@ -221,42 +214,57 @@ public class JDBCStorageService implements StorageService {
                     try{
                         try{
                             connection.setAutoCommit(false);
-                            //проверяем, записали ли уже группу
-                            PreparedStatement getGroup = connection.prepareStatement("SELECT * FROM intern.groups WHERE number=?");
-                            getGroup.setInt(1, dl.getStudents()[i].getGroup().getGroup());
-                            ResultSet rs = getGroup.executeQuery();//для проверки
-                            while(rs.next()){
-                                //сразу получем id
-                                dl.getStudents()[i].getGroup().setId(rs.getInt("id"));
+                            ResultSet rs;
+                            try ( //проверяем, записали ли уже группу
+                                    PreparedStatement getGroup = connection.prepareStatement(GET_GROUP_SQL)) {
+                                getGroup.setInt(1, dl.getStudents()[i].getGroup().getGroup());
+                                rs = getGroup.executeQuery(); //для проверки
+                            
+                                while(rs.next()){
+                                    //сразу получем id
+                                    dl.getStudents()[i].getGroup().setId(rs.getInt("id"));
+                                }
+                                rs.close();
                             }
                             if (dl.getStudents()[i].getGroup().getId()==0){
-                                //если раннее не записали
-                                PreparedStatement addGroup = connection.prepareStatement("INSERT INTO intern.groups (number) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
+                                ResultSet group_pk;
                                 //пишем текущую
-                                addGroup.setInt(1, dl.getStudents()[i].getGroup().getGroup());
-                                addGroup.execute();
-                                //получаем результат
-                                ResultSet group_pk = addGroup.getGeneratedKeys();
-                                while (group_pk.next()){
-                                    //получаем текущий id
-                                    dl.getStudents()[i].getGroup().setId(group_pk.getInt("id"));
+                                try ( //если раннее не записали
+                                        PreparedStatement addGroup = connection.prepareStatement(ADD_GROUP, Statement.RETURN_GENERATED_KEYS)) {
+                                    //пишем текущую
+                                    addGroup.setInt(1, dl.getStudents()[i].getGroup().getGroup());
+                                    addGroup.execute();
+                                    //получаем результат
+                                    group_pk = addGroup.getGeneratedKeys();
+                                
+                                    while (group_pk.next()){
+                                        //получаем текущий id
+                                        dl.getStudents()[i].getGroup().setId(group_pk.getInt("id"));
+                                    }
+                                    group_pk.close();
                                 }
                             }
-                            //пишем ученика
-                            PreparedStatement addPerson = connection.prepareStatement("INSERT INTO intern.students (family,name,age,group_id) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                            ResultSet person_pk;
                             //пишем текущего
-                            addPerson.setString(1, dl.getStudents()[i].getPerson().getFamily());
-                            addPerson.setString(2, dl.getStudents()[i].getPerson().getName());
-                            addPerson.setInt(3, dl.getStudents()[i].getPerson().getAge());
-                            addPerson.setInt(4, dl.getStudents()[i].getGroup().getId());
-                            addPerson.execute();
-                            //получаем результат
-                            ResultSet person_pk = addPerson.getGeneratedKeys();
+                            try ( //пишем ученика
+                                    PreparedStatement addPerson = connection.prepareStatement(ADD_PERSON, Statement.RETURN_GENERATED_KEYS)) {
+                                //пишем текущего
+                                addPerson.setString(1, dl.getStudents()[i].getPerson().getFamily());
+                                addPerson.setString(2, dl.getStudents()[i].getPerson().getName());
+                                addPerson.setInt(3, dl.getStudents()[i].getPerson().getAge());
+                                addPerson.setInt(4, dl.getStudents()[i].getGroup().getId());
+                                addPerson.execute();
+                                //получаем результат
+                                person_pk = addPerson.getGeneratedKeys();
+                            
 
-                            while(person_pk.next()){
-                                //получаем текущий id
-                                dl.getStudents()[i].getPerson().setId(person_pk.getInt("id"));
+                                while(person_pk.next()){
+                                    //получаем текущий id
+                                    dl.getStudents()[i].getPerson().setId(person_pk.getInt("id"));
+                                }
+                                person_pk.close();
                             }
+                            
                             //пишем предметы и их связи с группами
                             String[] headers = Arrays.copyOfRange(dl.getHeaders(), 4, dl.getHeaders().length);
                             Subject[] subjects = new Subject[headers.length];
@@ -265,53 +273,68 @@ public class JDBCStorageService implements StorageService {
                                 subjects[s].setTitle(headers[s]);
                             }
                             for (int j=0; j<subjects.length; j++){
-                                //пробуем получить предмет
-                                PreparedStatement getSubjects = connection.prepareStatement("SELECT * FROM intern.subjects WHERE subject=");
-                                getSubjects.setString(1, subjects[j].getTitle());
-                                rs = getSubjects.executeQuery();
-                                while(rs.next()){
-                                    //сразу получем id
-                                    subjects[j].setId(rs.getInt("id"));
+                                try ( //пробуем получить предмет
+                                        PreparedStatement getSubjects = connection.prepareStatement(GET_SUBJECT)) {
+                                    getSubjects.setString(1, subjects[j].getTitle());
+                                    rs = getSubjects.executeQuery();
+                                
+                                    while(rs.next()){
+                                        //сразу получем id
+                                        subjects[j].setId(rs.getInt("id"));
+                                    }
+                                    rs.close();
                                 }
                                 if (subjects[j].getId()==0){
-                                    //если раннее не записали
-                                    PreparedStatement addSubjects = connection.prepareStatement("INSERT INTO intern.subjects (subject) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
+                                    ResultSet subject_pk;
                                     //пишем текущую
-                                    addSubjects.setString(1, subjects[j].getTitle());
-                                    addSubjects.execute();
-                                    //получаем результат
-                                    ResultSet subject_pk = addSubjects.getGeneratedKeys();
-                                    while (subject_pk.next()){
-                                        //получаем текущий id
-                                        subjects[j].setId(subject_pk.getInt("id"));
+                                    try ( //если раннее не записали
+                                            PreparedStatement addSubjects = connection.prepareStatement(ADD_SUBJECT, Statement.RETURN_GENERATED_KEYS)) {
+                                        //пишем текущую
+                                        addSubjects.setString(1, subjects[j].getTitle());
+                                        addSubjects.execute();
+                                        //получаем результат
+                                        subject_pk = addSubjects.getGeneratedKeys();
+                                    
+                                        while (subject_pk.next()){
+                                            //получаем текущий id
+                                            subjects[j].setId(subject_pk.getInt("id"));
+                                        }
+                                        subject_pk.close();
                                     }
                                 }
-                                //проверяем связь между предметом и группой
-                                PreparedStatement getGroups_subjects = connection.prepareStatement("SELECT * FROM intern.groups_subjects WHERE subject_id=? AND group_id=?");
-                                getGroups_subjects.setInt(1, subjects[j].getId());
-                                getGroups_subjects.setInt(2, dl.getStudents()[i].getGroup().getId());
-                                rs = getGroups_subjects.executeQuery();
-                                while(rs.next()){
-                                    //сразу получем id
-                                    references_subject_id = rs.getInt("subject_id");
+                                try ( //проверяем связь между предметом и группой
+                                        PreparedStatement getGroups_subjects = connection.prepareStatement(GET_GROUPS_SUBJECTS)) {
+                                    getGroups_subjects.setInt(1, subjects[j].getId());
+                                    getGroups_subjects.setInt(2, dl.getStudents()[i].getGroup().getId());
+                                    rs = getGroups_subjects.executeQuery();
+                                
+                                    while(rs.next()){
+                                        //сразу получем id
+                                        references_subject_id = rs.getInt("subject_id");
+                                    }
+                                    rs.close();
                                 }
                                 if (references_subject_id!=subjects[j].getId()){
-                                    //связь не существует
-                                    PreparedStatement addGroups_subjects = connection.prepareStatement("INSERT INTO intern.groups_subjects (group_id, subject_id) VALUES (?, ?)");
                                     //пишем текущую
-                                    addGroups_subjects.setInt(1, dl.getStudents()[i].getGroup().getId());
-                                    addGroups_subjects.setInt(2, subjects[j].getId());
-                                    addGroups_subjects.execute();
+                                    try ( //связь не существует
+                                            PreparedStatement addGroups_subjects = connection.prepareStatement(ADD_GROUPS_SUBJECTS)) {
+                                        //пишем текущую
+                                        addGroups_subjects.setInt(1, dl.getStudents()[i].getGroup().getId());
+                                        addGroups_subjects.setInt(2, subjects[j].getId());
+                                        addGroups_subjects.execute();
+                                    }
                                 }
                             }
                             //пишем оценки
                             for(int k=0; k<dl.getStudents()[i].getGrades().length; k++){
-                                PreparedStatement addPerformance = connection.prepareStatement("INSERT INTO intern.performance (student_id, subject_id, grade) VALUES (?, ?, ?)");
+                                //пишем текущую
+                                try (PreparedStatement addPerformance = connection.prepareStatement(ADD_PERFORMANCE)) {
                                     //пишем текущую
                                     addPerformance.setInt(1, dl.getStudents()[i].getPerson().getId());
                                     addPerformance.setInt(2, subjects[k].getId());
                                     addPerformance.setInt(3, dl.getStudents()[i].getGrades()[k].getGrade());
                                     addPerformance.execute();
+                                }
                             }
                             connection.commit();
                             pgb.step();
@@ -324,6 +347,10 @@ public class JDBCStorageService implements StorageService {
                         throw new RuntimeException(ex);
                     }
                 }
+                connection.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(JDBCStorageService.class.getName()).log(Level.SEVERE, null, ex);
+                throw new RuntimeException(ex);
             }
         }
     }
