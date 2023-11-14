@@ -60,7 +60,7 @@ public class JDBCStorageService implements StorageService {
         private String url = "jdbc:postgresql://localhost/intern",
                        login = "postgres",
                        password = "postgresql";
-        private Connection connection;
+        private static Connection connection;
         private final String GET_BY_GROUP =  "SELECT students.id, students.family, students.name, students.age, groups.id, groups.number, subjects.id, subjects.subject, performance.id, performance.grade " +
                         "FROM intern.students " +
                         "INNER JOIN intern.groups ON students.group_id = groups.id " +
@@ -96,16 +96,23 @@ public class JDBCStorageService implements StorageService {
             }
         }
         
-        private static final TransactionScript instance = new TransactionScript();
+        private static TransactionScript instance = new TransactionScript();
         
-        public static TransactionScript getInstance(){
+        public static TransactionScript getInstance() throws RuntimeException{
+            try {
+                if(connection.isClosed()){
+                    instance = new TransactionScript();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(JDBCStorageService.class.getName()).log(Level.SEVERE, null, ex);
+                throw new RuntimeException(ex);
+            }
             return instance;
         }
         //получаем по группе
         public List<Student> listStudents(Group group) throws RuntimeException{
             List<Student> output = new ArrayList<>();
             try{
-                connection.setAutoCommit(false);
                 ResultSet resultSet;
                 try (PreparedStatement statement = connection.prepareStatement(GET_BY_GROUP)) {
                     statement.setInt(1, group.getGroup());
@@ -118,6 +125,13 @@ public class JDBCStorageService implements StorageService {
             } catch (SQLException ex) {
                 Logger.getLogger(JDBCStorageService.class.getName()).log(Level.SEVERE, null, ex);
                 throw new RuntimeException(ex);
+            }finally{
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(JDBCStorageService.class.getName()).log(Level.SEVERE, null, ex);
+                    throw new RuntimeException(ex);
+                }
             }
             return output;
         }
@@ -125,7 +139,6 @@ public class JDBCStorageService implements StorageService {
         public List<Student> listStudents(int age) throws RuntimeException{
             List<Student> output = new ArrayList<>();
             try{
-                connection.setAutoCommit(false);
                 ResultSet resultSet;
                 try (PreparedStatement statement = connection.prepareStatement(GET_BY_AGE)) {
                     statement.setInt(1, age);
@@ -138,6 +151,13 @@ public class JDBCStorageService implements StorageService {
             } catch (SQLException ex) {
                 Logger.getLogger(JDBCStorageService.class.getName()).log(Level.SEVERE, null, ex);
                 throw new RuntimeException(ex);
+            }finally{
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(JDBCStorageService.class.getName()).log(Level.SEVERE, null, ex);
+                    throw new RuntimeException(ex);
+                }
             }
             return output;
         }
@@ -145,7 +165,6 @@ public class JDBCStorageService implements StorageService {
         public List<Student> listStudents(String family) throws RuntimeException{
             List<Student> output = new ArrayList<>();
             try{
-                connection.setAutoCommit(false);
                 ResultSet resultSet;
                 try ( // Подготавливаем SQL запрос для получения информации о студентах
                         PreparedStatement statement = connection.prepareStatement(GET_BY_FAMILY)) {
@@ -159,6 +178,13 @@ public class JDBCStorageService implements StorageService {
             } catch (SQLException ex) {
                 Logger.getLogger(JDBCStorageService.class.getName()).log(Level.SEVERE, null, ex);
                 throw new RuntimeException(ex);
+            }finally{
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(JDBCStorageService.class.getName()).log(Level.SEVERE, null, ex);
+                    throw new RuntimeException(ex);
+                }
             }
             return output;
         }
